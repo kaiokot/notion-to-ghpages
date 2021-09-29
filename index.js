@@ -4,7 +4,7 @@ import fs from "fs";
 import path from "path";
 
 const { NOTION_PAGE } = process.env
-
+const notionSuccessStatus = "success";
 
 async function exportPage() {
 
@@ -28,7 +28,7 @@ async function exportPage() {
 
         enqueueTaskState = responseGetTasks.data.results[0].state;
 
-        if (enqueueTaskState == "success") {
+        if (enqueueTaskState == notionSuccessStatus) {
 
             let exportUrl = responseGetTasks.data.results[0].status.exportURL;
 
@@ -40,7 +40,7 @@ async function exportPage() {
             break;
         }
 
-    } while (enqueueTaskState !== "success");
+    } while (enqueueTaskState !== notionSuccessStatus);
 }
 
 async function getTaskRequest() {

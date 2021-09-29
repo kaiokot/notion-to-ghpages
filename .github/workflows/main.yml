@@ -1,0 +1,13 @@
+name: Export notion
+  schedule:
+    - cron: '0 14 * * 1'
+jobs:
+  issue:
+    runs-on: ubuntu-latest
+    steps:
+        - uses: kaiokot/notion-to-ghpages
+        env:
+          NOTION_URL: ${{ secrets.NOTION_URL }}
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTION_PAGE: ${{ secrets.NOTION_PAGE }}
+        

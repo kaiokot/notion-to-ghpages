@@ -1,13 +1,14 @@
 
 let axios = require("axios")
 
+
+const { NOTION_URL, NOTION_TOKEN, NOTION_PAGE } = process.env
+
+
+
 let api = axios.create({
-    baseURL: "https://www.notion.so"
+    baseURL: NOTION_URL
 });
-
-
-const { NOTION_TOKEN, NOTION_PAGE } = process.env
-
 
 api.defaults.headers.common["Content-Type"] = "application/json";
 api.defaults.headers.common["User-Agent"] = "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:92.0) Gecko/20100101 Firefox/92.0";
@@ -38,7 +39,7 @@ async function exportPage() {
     const responseEnqueueTask = await api.post("/api/v3/enqueueTask", exportRequest);
     let taskId = responseEnqueueTask.data.taskId;
 
-    console.log("Enqueue taskID: \n", taskId)
+    console.log(`Enqueued taskID:\n\n${taskId}\n\n`)
 
     let taskIdsRequest = { "taskIds": [taskId] };
 
@@ -55,7 +56,7 @@ async function exportPage() {
         if (enqueueTaskState == "success") {
 
             let exportUrl = responseGetTasks.data.results[0].status.exportURL;
-            console.log("Uoww here is your download URL: \n", exportUrl);
+            console.log(`Uoww =) here is your download URL:\n\n${exportUrl}\n\n`);
             break;
         }
 

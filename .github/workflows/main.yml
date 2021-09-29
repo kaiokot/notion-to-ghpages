@@ -1,6 +1,6 @@
 name: Export notion to github pages
-  schedule:
-    - cron: "0 */6 * * *"  # Call every 6 hours
+schedule:
+  - cron: "0 */6 * * *"  # Call every 6 hours
 jobs:
   issue:
     runs-on: ubuntu-latest

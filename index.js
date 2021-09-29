@@ -8,7 +8,7 @@ const { NOTION_PAGE } = process.env
 
 async function exportPage() {
 
-    let exportRequest = await getEnqueueRequest();
+    let exportRequest = await getTaskRequest();
 
     const responseEnqueueTask = await api.post("/api/v3/enqueueTask", exportRequest);
 
@@ -43,7 +43,7 @@ async function exportPage() {
     } while (enqueueTaskState !== "success");
 }
 
-async function getEnqueueRequest() {
+async function getTaskRequest() {
     return {
         "task": {
             "eventName": "exportBlock",

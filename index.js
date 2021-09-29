@@ -1,4 +1,7 @@
 import api from "./api.js";
+import https from "https";
+import fs from "fs";
+import path from "path";
 
 const { NOTION_PAGE } = process.env
 
@@ -8,6 +11,7 @@ async function exportPage() {
     let exportRequest = await getEnqueueRequest();
 
     const responseEnqueueTask = await api.post("/api/v3/enqueueTask", exportRequest);
+
     let taskId = responseEnqueueTask.data.taskId;
 
     console.log(`Enqueued taskID:\n\n${taskId}\n\n`)
@@ -27,7 +31,12 @@ async function exportPage() {
         if (enqueueTaskState == "success") {
 
             let exportUrl = responseGetTasks.data.results[0].status.exportURL;
+
+            var parsedFileName = exportUrl.split('/').pop().split('#')[0].split('?')[0];
+
             console.log(`Uoww =) here is your download URL:\n\n${exportUrl}\n\n`);
+
+            await downloadFromUri(exportUrl, path.join(path.resolve(), `tmp/${parsedFileName}`));
             break;
         }
 
@@ -50,6 +59,19 @@ async function getEnqueueRequest() {
         }
     }
 }
+
+async function downloadFromUri(url, dest, cb) {
+    var file = fs.createWriteStream(dest);
+    https.get(url, function (response) {
+        response.pipe(file);
+        file.on('finish', function () {
+            file.close(cb);
+        });
+    }).on('error', function (err) {
+        fs.unlink(dest);
+        if (cb) cb(err.message);
+    });
+};
 
 
 exportPage()

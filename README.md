@@ -2,12 +2,12 @@
 Simple script to export notion pages into GithubPages
 
 
-to run:
+To run:
 
-clone the repo
+Clone the repo
 
-run
-
+Run the following comands:
+```bash
 yarn
-
-node index.js
+make start
+```

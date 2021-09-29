@@ -5,24 +5,21 @@ let api = axios.create({
     baseURL: "https://www.notion.so"
 });
 
-const token = "token";
-const pageId = "pageId";
-const spaceId = "spaceId";
+
+const { NOTION_TOKEN, NOTION_PAGE } = process.env
+
 
 api.defaults.headers.common["Content-Type"] = "application/json";
 api.defaults.headers.common["User-Agent"] = "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:92.0) Gecko/20100101 Firefox/92.0";
 api.defaults.headers.common["Accept-Language"] = "en-US,en;q=0.5";
-api.defaults.headers.common["Cookie"] = `token_v2=${token};`;
+api.defaults.headers.common["Cookie"] = `token_v2=${NOTION_TOKEN};`;
 
 async function getEnqueueRequest() {
     return {
         "task": {
             "eventName": "exportBlock",
             "request": {
-                "block": {
-                    "id": pageId,
-                    "spaceId": spaceId
-                },
+                "blockId": NOTION_PAGE,
                 "exportOptions": {
                     "exportType": "html",
                     "locale": "en",
@@ -41,7 +38,7 @@ async function exportPage() {
     const responseEnqueueTask = await api.post("/api/v3/enqueueTask", exportRequest);
     let taskId = responseEnqueueTask.data.taskId;
 
-    console.log("Enqueue taskID:", taskId)
+    console.log("Enqueue taskID: \n", taskId)
 
     let taskIdsRequest = { "taskIds": [taskId] };
 
@@ -58,12 +55,11 @@ async function exportPage() {
         if (enqueueTaskState == "success") {
 
             let exportUrl = responseGetTasks.data.results[0].status.exportURL;
-            console.log("uow here is your url \n", exportUrl);
+            console.log("Uoww here is your download URL: \n", exportUrl);
             break;
         }
 
     } while (enqueueTaskState !== "success");
-
 }
 
 

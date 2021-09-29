@@ -1,5 +1,11 @@
 {
   "dependencies": {
     "axios": "^0.21.4"
+  },
+  "devDependencies": {
+    "dotenv": "^10.0.0"
+  },
+  "scripts": {
+    "dev": "node -r dotenv/config index.js"
   }
 }

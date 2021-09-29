@@ -1,36 +1,7 @@
+import api from "./api.js";
 
-let axios = require("axios")
+const { NOTION_PAGE } = process.env
 
-
-const { NOTION_URL, NOTION_TOKEN, NOTION_PAGE } = process.env
-
-
-
-let api = axios.create({
-    baseURL: NOTION_URL
-});
-
-api.defaults.headers.common["Content-Type"] = "application/json";
-api.defaults.headers.common["User-Agent"] = "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:92.0) Gecko/20100101 Firefox/92.0";
-api.defaults.headers.common["Accept-Language"] = "en-US,en;q=0.5";
-api.defaults.headers.common["Cookie"] = `token_v2=${NOTION_TOKEN};`;
-
-async function getEnqueueRequest() {
-    return {
-        "task": {
-            "eventName": "exportBlock",
-            "request": {
-                "blockId": NOTION_PAGE,
-                "exportOptions": {
-                    "exportType": "html",
-                    "locale": "en",
-                    "timeZone": "America/Sao_Paulo"
-                },
-                "recursive": true
-            }
-        }
-    }
-}
 
 async function exportPage() {
 
@@ -61,6 +32,23 @@ async function exportPage() {
         }
 
     } while (enqueueTaskState !== "success");
+}
+
+async function getEnqueueRequest() {
+    return {
+        "task": {
+            "eventName": "exportBlock",
+            "request": {
+                "blockId": NOTION_PAGE,
+                "exportOptions": {
+                    "exportType": "html",
+                    "locale": "en",
+                    "timeZone": "America/Sao_Paulo"
+                },
+                "recursive": true
+            }
+        }
+    }
 }
 
 
